@@ -1,3 +1,6 @@
+2.0.0 (Pending)
+* Working on it. Patience.
+
 1.0.4 (1/2/2006)
 * Changed:  By default creates the uuid.state file in the working directory,
             not in the installation directory, which requires sudo privileges (e.g. gem).

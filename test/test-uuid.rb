@@ -1,5 +1,6 @@
 # Author:: Assaf Arkin  assaf@labnotes.org
-# Copyright:: Copyright (c) 2005,2007 Assaf Arkin
+#          Eric Hodel drbrain@segment7.net
+# Copyright:: Copyright (c) 2005-2008 Assaf Arkin, Eric Hodel
 # License:: MIT and/or Creative Commons Attribution-ShareAlike
 
 require 'test/unit'

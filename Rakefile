@@ -15,7 +15,7 @@ spec = Gem::Specification.new do |spec|
     UUID generator for producing universally unique identifiers based
     on RFC 4122 (http://www.ietf.org/rfc/rfc4122.txt).
 EOF
-  spec.author = "Assaf Arkin"
+  spec.authors << "Assaf Arkin" << "Eric Hodel"
   spec.email = "assaf@labnotes.org"
   spec.homepage = "http://trac.labnotes.org/cgi-bin/trac.cgi/wiki/Ruby/UuidGenerator"
   spec.files = FileList["{bin,test,lib,docs}/**/*", "README", "MIT-LICENSE", "Rakefile", "CHANGELOG"].to_a
