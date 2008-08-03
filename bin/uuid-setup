@@ -1,7 +1,7 @@
-begin
-  require 'uuid'
-rescue LoadError
-  require 'rubygems'
-  require 'uuid'
-end
-UUID::setup
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'uuid'
+
+UUID.new
+
