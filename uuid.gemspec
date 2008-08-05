@@ -9,14 +9,14 @@ EOF
   spec.authors << 'Assaf Arkin' << 'Eric Hodel'
   spec.email = 'assaf@labnotes.org'
   spec.homepage = 'http://uuid.rubyforge.org/'
-  spec.files = FileList['{bin,test,lib,docs}/**/*', 'README', 'MIT-LICENSE', 'Rakefile', 'CHANGELOG'].to_a
+  spec.files = FileList['{bin,test,lib,docs}/**/*', 'README.rdoc', 'MIT-LICENSE', 'Rakefile', 'CHANGELOG'].to_a
   spec.require_path = 'lib'
   spec.bindir = 'bin'
   spec.executables = ['uuid-setup']
   spec.default_executable = 'uuid-setup'
   spec.has_rdoc = true
-  spec.rdoc_options << '--main' << 'README' << '--title' <<  'UUID generator' << '--line-numbers'
-  spec.extra_rdoc_files = ['README']
+  spec.rdoc_options << '--main' << 'README.rdoc' << '--title' <<  'UUID generator' << '--line-numbers'
+  spec.extra_rdoc_files = ['README.rdoc']
   spec.rubyforge_project = 'reliable-msg'
 
   spec.add_runtime_dependency 'macaddr'

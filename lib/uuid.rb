@@ -14,6 +14,7 @@ require 'tmpdir'
 require 'rubygems'
 require 'macaddr'
 
+
 ##
 # = Generating UUIDs
 #
