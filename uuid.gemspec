@@ -9,7 +9,7 @@ EOF
   spec.authors << 'Assaf Arkin' << 'Eric Hodel'
   spec.email = 'assaf@labnotes.org'
   spec.homepage = 'http://uuid.rubyforge.org/'
-  spec.files = FileList['{bin,test,lib,docs}/**/*', 'README.rdoc', 'MIT-LICENSE', 'Rakefile', 'CHANGELOG'].to_a
+  spec.files = Dir['{bin,test,lib,docs}/**/*', 'README.rdoc', 'MIT-LICENSE', 'Rakefile', 'CHANGELOG'].to_a
   spec.require_path = 'lib'
   spec.bindir = 'bin'
   spec.executables = ['uuid-setup']
