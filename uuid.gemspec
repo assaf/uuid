@@ -19,5 +19,5 @@ EOF
   spec.extra_rdoc_files = ['README.rdoc']
   spec.rubyforge_project = 'reliable-msg'
 
-  spec.add_runtime_dependency 'macaddr'
+  spec.add_dependency 'macaddr', ['~>1.0']
 end
