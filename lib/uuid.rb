@@ -11,6 +11,9 @@ require 'fileutils'
 require 'thread'
 require 'tmpdir'
 
+require 'rubygems'
+require 'macaddr'
+
 ##
 # = Generating UUIDs
 #
@@ -97,12 +100,22 @@ class UUID
 
   @state_file = nil
   @mode = nil
+  @uuid = nil
 
   ##
   # The access mode of the state file.  Set it with state_file.
 
   def self.mode
     @mode
+  end
+
+  ##
+  # Generates a new UUID string using +format+.  See FORMATS for a list of
+  # supported formats.
+
+  def self.generate(format = :default)
+    @uuid ||= new
+    @uuid.generate formate
   end
 
   ##
@@ -157,18 +170,7 @@ class UUID
     else
       config = ''
 
-      Dir.chdir Dir.tmpdir do
-        config << `ifconfig 2> /dev/null`
-        config << `ipconfig /all 2>NUL` unless $?.success?
-      end
-
-      addresses =
-        config.scan(/[^:\-](?:[\da-z][\da-z][:\-]){5}[\da-z][\da-z][^:\-]/i)
-
-      raise Error, 'MAC address not found via ifconfig or ipconfig' if
-        addresses.empty?
-
-      @mac = addresses.first.scan(/[0-9a-fA-F]{2}/).join.hex & 0x7FFFFFFFFFFF
+      @mac = Mac.addr.gsub(':').hex & 0x7FFFFFFFFFFF
       @sequence = rand 0x10000
 
       open_lock 'w' do |io| write_state io end

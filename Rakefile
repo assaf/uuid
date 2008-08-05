@@ -12,8 +12,8 @@ spec = Gem::Specification.new do |spec|
   spec.version = File.read(__FILE__.pathmap("%d/#{VERSION_FILE}")).scan(/VERSION\s*=\s*(['"])(.*)\1/)[0][1]
   spec.summary = "UUID generator"
   spec.description = <<-EOF
-    UUID generator for producing universally unique identifiers based
-    on RFC 4122 (http://www.ietf.org/rfc/rfc4122.txt).
+UUID generator for producing universally unique identifiers based on RFC 4122
+(http://www.ietf.org/rfc/rfc4122.txt).
 EOF
   spec.authors << "Assaf Arkin" << "Eric Hodel"
   spec.email = "assaf@labnotes.org"
@@ -28,8 +28,9 @@ EOF
   spec.rdoc_options << "--main" << "README" << "--title" <<  "UUID generator" << "--line-numbers"
   spec.extra_rdoc_files = ["README"]
   spec.rubyforge_project = "reliable-msg"
-end
 
+  spec.add_runtime_dependency 'macaddr'
+end
 
 desc "Default Task"
 task :default => [:test, :rdoc]
