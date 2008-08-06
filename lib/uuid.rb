@@ -171,7 +171,7 @@ class UUID
     else
       config = ''
 
-      @mac = Mac.addr.gsub(':').hex & 0x7FFFFFFFFFFF
+      @mac = Mac.addr.gsub(':', '').hex & 0x7FFFFFFFFFFF
       @sequence = rand 0x10000
 
       open_lock 'w' do |io| write_state io end
@@ -282,6 +282,11 @@ class UUID
     mac1 = (@mac >> 32) & 0xffff
 
     io.write [mac1, mac2, @sequence, @last_clock].pack(STATE_FILE_FORMAT)
+  end
+  
+  def inspect
+    mac = ("%08x" % @mac).scan(/[0-9a-f]{2}/).join(':')
+    "MAC: #{mac}  Sequence: #{@sequence}"
   end
 
 end
