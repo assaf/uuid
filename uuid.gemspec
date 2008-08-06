@@ -8,7 +8,7 @@ UUID generator for producing universally unique identifiers based on RFC 4122
 EOF
   spec.authors << 'Assaf Arkin' << 'Eric Hodel'
   spec.email = 'assaf@labnotes.org'
-  spec.homepage = 'http://uuid.rubyforge.org/'
+  spec.homepage = 'http://github.com/assaf/uuid'
   spec.files = Dir['{bin,test,lib,docs}/**/*', 'README.rdoc', 'MIT-LICENSE', 'Rakefile', 'CHANGELOG'].to_a
   spec.require_path = 'lib'
   spec.bindir = 'bin'
