@@ -12,8 +12,6 @@ EOF
   spec.files = Dir['{bin,test,lib,docs}/**/*', 'README.rdoc', 'MIT-LICENSE', 'Rakefile', 'CHANGELOG'].to_a
   spec.require_path = 'lib'
   spec.bindir = 'bin'
-  spec.executables = ['uuid-setup']
-  spec.default_executable = 'uuid-setup'
   spec.has_rdoc = true
   spec.rdoc_options << '--main' << 'README.rdoc' << '--title' <<  'UUID generator' << '--line-numbers'
   spec.extra_rdoc_files = ['README.rdoc']
