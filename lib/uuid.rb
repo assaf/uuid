@@ -65,18 +65,15 @@ class UUID
   ##
   # Clock multiplier. Converts Time (resolution: seconds) to UUID clock
   # (resolution: 10ns)
-
   CLOCK_MULTIPLIER = 10000000
 
   ##
   # Clock gap is the number of ticks (resolution: 10ns) between two Ruby Time
   # ticks.
-
   CLOCK_GAPS = 100000
 
   ##
   # Version number stamped into the UUID to identify it as time-based.
-
   VERSION_CLOCK = 0x0100
 
   ##
@@ -87,7 +84,6 @@ class UUID
   # <tt>:compact</tt>:: Produces a 32 digits (hexadecimal) value with no
   #                     hyphens
   # <tt>:urn</tt>:: Adds the prefix <tt>urn:uuid:</tt> to the default format
-
   FORMATS = {
     :compact => '%08x%04x%04x%04x%012x',
     :default => '%08x-%04x-%04x-%04x-%012x',
@@ -96,7 +92,6 @@ class UUID
 
   ##
   # MAC address (48 bits), sequence number and last clock
-
   STATE_FILE_FORMAT = 'SLLQ'
 
   @state_file = nil
@@ -116,7 +111,7 @@ class UUID
 
   def self.generate(format = :default)
     @uuid ||= new
-    @uuid.generate formate
+    @uuid.generate format
   end
 
   ##
@@ -128,7 +123,6 @@ class UUID
   # If the default state dir is not writable, UUID falls back to ~/.ruby-uuid.
   #
   # State files are not portable across machines.
-
   def self.state_file(mode = 0644)
     return @state_file if @state_file
 
@@ -139,18 +133,18 @@ class UUID
 
       csidl_common_appdata = 0x0023
       path = 0.chr * 260
-      get_folder_path = Win32API.new 'shell32', 'SHGetFolderPath', 'LLLLP', 'L'
+      get_folder_path = Win32API.new('shell32', 'SHGetFolderPath', 'LLLLP', 'L')
       get_folder_path.call 0, csidl_common_appdata, 0, 1, path
 
-      state_dir = File.join path.strip
+      state_dir = File.join(path.strip)
     rescue LoadError
-      state_dir = File.join '', 'var', 'tmp'
+      state_dir = File.join('', 'var', 'tmp')
     end
 
-    if File.writable? state_dir then
-      @state_file = File.join state_dir, 'ruby-uuid'
+    if File.writable?(state_dir) then
+      @state_file = File.join(state_dir, 'ruby-uuid')
     else
-      @state_file = File.expand_path File.join('~', '.ruby-uuid')
+      @state_file = File.expand_path(File.join('~', '.ruby-uuid'))
     end
 
     @state_file
@@ -158,35 +152,30 @@ class UUID
 
   ##
   # Create a new UUID generator.  You really only need to do this once.
-
   def initialize
     @drift = 0
     @last_clock = (Time.now.to_f * CLOCK_MULTIPLIER).to_i
     @mutex = Mutex.new
 
-    if File.exist? self.class.state_file then
-      File.open self.class.state_file, 'r', @mode do |io|
-        @mac, @sequence, = read_state io
-      end
+    if File.exist?(self.class.state_file) then
+      next_sequence
     else
-      config = ''
-
       @mac = Mac.addr.gsub(':', '').hex & 0x7FFFFFFFFFFF
       @sequence = rand 0x10000
 
-      open_lock 'w' do |io| write_state io end
+      open_lock 'w' do |io|
+        write_state io
+      end
     end
   end
 
   ##
   # Generates a new UUID string using +format+.  See FORMATS for a list of
   # supported formats.
-
   def generate(format = :default)
     template = FORMATS[format]
 
-    raise ArgumentError, "invalid UUID format #{format.inspect}" if
-      template.nil?
+    raise ArgumentError, "invalid UUID format #{format.inspect}" unless template
 
     # The clock must be monotonically increasing. The clock resolution is at
     # best 100 ns (UUID spec), but practically may be lower (on my setup,
@@ -204,7 +193,7 @@ class UUID
       if clock > @last_clock then
         @drift = 0
         @last_clock = clock
-      elsif clock = @last_clock then
+      elsif clock == @last_clock then
         drift = @drift += 1
 
         if drift < 10000 then
@@ -230,10 +219,9 @@ class UUID
 
   ##
   # Updates the state file with a new sequence number.
-
-  def next_sequence(config = nil)
+  def next_sequence
     open_lock 'r+' do |io|
-      @mac, @sequence, @last_clock = read_state io
+      @mac, @sequence, @last_clock = read_state(io)
 
       io.rewind
       io.truncate 0
@@ -243,20 +231,27 @@ class UUID
       write_state io
     end
   rescue Errno::ENOENT
-    open_lock 'w' do |io| write_state io end
+    open_lock 'w' do |io|
+      write_state io
+    end
   ensure
     @last_clock = (Time.now.to_f * CLOCK_MULTIPLIER).to_i
     @drift = 0
   end
 
+  def inspect
+    mac = ("%08x" % @mac).scan(/[0-9a-f]{2}/).join(':')
+    "MAC: #{mac}  Sequence: #{@sequence}"
+  end
+
+protected
+
   ##
   # Open the state file with an exclusive lock and access mode +mode+.
-
   def open_lock(mode)
     File.open self.class.state_file, mode, self.class.mode do |io|
       begin
         io.flock File::LOCK_EX
-
         yield io
       ensure
         io.flock File::LOCK_UN
@@ -266,17 +261,16 @@ class UUID
 
   ##
   # Read the state from +io+
-
   def read_state(io)
-    mac1, mac2, seq, last_clock = io.read(32).unpack STATE_FILE_FORMAT
+    mac1, mac2, seq, last_clock = io.read(32).unpack(STATE_FILE_FORMAT)
     mac = (mac1 << 32) + mac2
 
     return mac, seq, last_clock
   end
 
+
   ##
   # Write that state to +io+
-
   def write_state(io)
     mac2 =  @mac        & 0xffffffff
     mac1 = (@mac >> 32) & 0xffff
@@ -284,10 +278,4 @@ class UUID
     io.write [mac1, mac2, @sequence, @last_clock].pack(STATE_FILE_FORMAT)
   end
   
-  def inspect
-    mac = ("%08x" % @mac).scan(/[0-9a-f]{2}/).join(':')
-    "MAC: #{mac}  Sequence: #{@sequence}"
-  end
-
 end
-
