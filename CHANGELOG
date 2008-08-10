@@ -1,22 +1,29 @@
 2.0.0 (Pending)
-* Working on it. Patience.
+* Changed:  uuid.state replaced by ruby-uuid file.  By default stored in
+            /var/tmp, or if that path is not accessible, as .ruby-uuid in the
+            home directory.
+* Changed:  ruby-uuid is now stored as binary file (faster read/write), if you
+            need to have a peek, call UUID.new.
+* Changed:  API.  UUID.generate still works using the default instance.
+* Changed:  Source code for this release hosted on the wonderful Github.
 
-1.0.4 (1/2/2006)
+1.0.4 (2007-08-28)
 * Changed:  By default creates the uuid.state file in the working directory,
-            not in the installation directory, which requires sudo privileges (e.g. gem).
+            not in the installation directory, which requires sudo privileges
+            (e.g. gem).
 
-1.0.3 (1/8/2006)
+1.0.3 (2006-11-08)
 * Fixed:    Work around YAML bug in serializing that occurs when MAC address
             consists only of decimal digits. Credit: ebuprofen"
 
-1.0.2 (1/28/2006)
+1.0.2 (2006-08-19)
 * Changed:  Constants are not conditionally defined (removes warnings when
             using in Rails.
 
-1.0.1 (1/26/2006)
+1.0.1 (2006-07-27)
 * Added:    Regular expressions to test if a string is a UUID.
 * Changed:  When used in ActiveRecord, adds as callback instead of overriding
             save.
 
-1.0.0 (1/20/2005)
+1.0.0 (2005-11-20)
 * Changed:  Separated form reliable-msg into its own package.
