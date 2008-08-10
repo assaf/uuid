@@ -4,12 +4,30 @@ require 'rubygems'
 require 'rake/testtask'
 require 'rake/rdoctask'
 require 'rake/gempackagetask'
+require 'rubygems/source_info_cache'
 
 
 spec = Gem::Specification.load(File.join(File.dirname(__FILE__), 'uuid.gemspec'))
 
 desc "Default Task"
 task 'default' => ['test', 'rdoc']
+
+
+desc "If you're building from sources, run this task first to setup the necessary dependencies"
+task 'setup' do
+  windows = Config::CONFIG['host_os'] =~ /windows|cygwin|bccwin|cygwin|djgpp|mingw|mswin|wince/i
+  rb_bin = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name'])
+  for missing in spec.dependencies.select { |dep| Gem::SourceIndex.from_installed_gems.search(dep).empty? }
+    dep = Gem::Dependency.new(missing.name, missing.version_requirements)
+    spec = Gem::SourceInfoCache.search(dep, true, true).last
+    fail "#{dep} not found in local or remote repository!" unless spec
+    puts "Installing #{spec.full_name} ..."
+    args = [rb_bin, '-S', 'gem', 'install', spec.name, '-v', spec.version.to_s]
+    args.unshift('sudo') unless windows || ENV['GEM_HOME']
+    sh args.map{ |a| a.inspect }.join(' ')
+  end
+end
+
 
 desc "Run all test cases"
 Rake::TestTask.new do |test|
@@ -32,7 +50,7 @@ gem = Rake::GemPackageTask.new(spec) do |pkg|
 end
 
 desc "Install the package locally"
-task 'install'=>'package' do |task|
+task 'install'=>['setup', 'package'] do |task|
   system 'sudo', 'gem', 'install', "pkg/#{spec.name}-#{spec.version}.gem"
 end
 
@@ -42,7 +60,7 @@ task 'uninstall' do |task|
 end
 
 
-task 'release'=>['test', 'package'] do
+task 'release'=>['setup', 'test', 'package'] do
   
   require 'rubyforge'
 =begin  
