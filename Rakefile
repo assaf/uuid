@@ -16,8 +16,8 @@ task 'default' => ['test', 'rdoc']
 desc "If you're building from sources, run this task first to setup the necessary dependencies"
 task 'setup' do
   windows = Config::CONFIG['host_os'] =~ /windows|cygwin|bccwin|cygwin|djgpp|mingw|mswin|wince/i
-  rb_bin = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name'])
-  for missing in spec.dependencies.select { |dep| Gem::SourceIndex.from_installed_gems.search(dep).empty? }
+  rb_bin = File.expand_path(Config::CONFIG['ruby_install_name'], Config::CONFIG['bindir'])
+  spec.dependencies.select { |dep| Gem::SourceIndex.from_installed_gems.search(dep).empty? }.each do |missing|
     dep = Gem::Dependency.new(missing.name, missing.version_requirements)
     spec = Gem::SourceInfoCache.search(dep, true, true).last
     fail "#{dep} not found in local or remote repository!" unless spec

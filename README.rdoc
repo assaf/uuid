@@ -47,7 +47,7 @@ the node identifier.
 For more information see {RFC 4122}[http://www.ietf.org/rfc/rfc4122.txt].
 
 
-== UUID state file
+== UUID State File
 
 The UUID generator uses a state file to hold the MAC address and sequence
 number.
@@ -71,7 +71,25 @@ before running the UUID generator.
 State files are not portable across machines.
 
 
-== Change log
+== Latest and Greatest
+
+Stable release are made through RubyForge, to upgrade simply:
+
+  gem upgrade uuid
+
+You can subscribe for notifications of new releases through the reliable-msg
+project page at http://rubyforge.org/projects/reliable-msg
+
+Source code and documentation hosted on Github:
+
+  http://github.com/assaf/uuid
+
+To get UUID from source:
+
+  git clone git://github.com/assaf/uuid.git
+
+
+== Change Log
 
 :include: CHANGELOG
 

@@ -1,11 +1,12 @@
-2.0.0 (Pending)
-* Changed:  uuid.state replaced by ruby-uuid file.  By default stored in
+2.0.0 (2008-08-28)
+* Changed:  uuid.state replaced by ruby-uuid file. By default stored in
             /var/tmp, or if that path is not accessible, as .ruby-uuid in the
             home directory.
 * Changed:  ruby-uuid is now stored as binary file (faster read/write), if you
             need to have a peek, call UUID.new.
-* Changed:  API.  UUID.generate still works using the default instance.
-* Changed:  Source code for this release hosted on the wonderful Github.
+* Changed:  API. UUID.generate still works using the default instance.
+* Changed:  Source code and documentation for this release hosted on the
+            wonderful Github: http://github.com/assaf/uuid
 
 1.0.4 (2007-08-28)
 * Changed:  By default creates the uuid.state file in the working directory,
