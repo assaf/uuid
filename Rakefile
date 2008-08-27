@@ -51,12 +51,20 @@ end
 
 desc "Install the package locally"
 task 'install'=>['setup', 'package'] do |task|
-  system 'sudo', 'gem', 'install', "pkg/#{spec.name}-#{spec.version}.gem"
+  rb_bin = File.expand_path(Config::CONFIG['ruby_install_name'], Config::CONFIG['bindir'])
+  args = [rb_bin, '-S', 'gem', 'install', "pkg/#{spec.name}-#{spec.version}.gem"]
+  windows = Config::CONFIG['host_os'] =~ /windows|cygwin|bccwin|cygwin|djgpp|mingw|mswin|wince/i
+  args.unshift('sudo') unless windows || ENV['GEM_HOME']
+  sh args.map{ |a| a.inspect }.join(' ')
 end
 
 desc "Uninstall previously installed packaged"
 task 'uninstall' do |task|
-  system 'sudo', 'gem', 'uninstall', spec.name, '-v', spec.version.to_s
+  rb_bin = File.expand_path(Config::CONFIG['ruby_install_name'], Config::CONFIG['bindir'])
+  args = [rb_bin, '-S', 'gem', 'install', spec.name, '-v', spec.version.to_s]
+  windows = Config::CONFIG['host_os'] =~ /windows|cygwin|bccwin|cygwin|djgpp|mingw|mswin|wince/i
+  args.unshift('sudo') unless windows || ENV['GEM_HOME']
+  sh args.map{ |a| a.inspect }.join(' ')
 end
 
 
