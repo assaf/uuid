@@ -87,6 +87,7 @@ task 'release'=>['setup', 'test', 'package'] do
   puts "Uploading #{spec.name} #{spec.version}"
   files = Dir['pkg/*.{gem,tgz,zip}']
   rubyforge = RubyForge.new
+  rubyforge.configure
   rubyforge.login    
   rubyforge.userconfig.merge! 'release_changes'=>'.changes', 'preformatted'=>true
   rubyforge.add_release spec.rubyforge_project.downcase, spec.name.downcase, spec.version, *files
