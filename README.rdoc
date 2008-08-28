@@ -80,24 +80,17 @@ Stable release are made through RubyForge, to upgrade simply:
 You can subscribe for notifications of new releases through the reliable-msg
 project page at http://rubyforge.org/projects/reliable-msg
 
-Source code and documentation hosted on Github:
-
-  http://github.com/assaf/uuid
+Source code and documentation hosted on Github: http://github.com/assaf/uuid
 
 To get UUID from source:
 
   git clone git://github.com/assaf/uuid.git
 
 
-== Change Log
-
-:include: CHANGELOG
-
-
 == License
 
-This package is licensed under the MIT license and/or the {Creative
-Commons Attribution-ShareAlike}[http://creativecommons.org/licenses/by-sa/2.5/legalcode].
+This package is licensed under the MIT license and/or the Creative
+Commons Attribution-ShareAlike.
 
 :include: MIT-LICENSE
 
