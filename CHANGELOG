@@ -1,3 +1,10 @@
+2.0.1 (Pending)
+* Fixed:    MAC address parses correctly when using colon as separator, not
+            when using hyphen (ruby-mingw32). If your MAC address is all zero
+            (check with UUID.new.inspect), remove the ruby-uuid file, and it
+            will reset to the actual MAC address. (Rasha)
+* Fixed:    UUID.new.inspect not showing full MAC address.
+
 2.0.0 (2008-08-28)
 * Changed:  API. UUID.generate still works as it always did, but the rest of
             the API is brand spanking new, so if you rely on anything besides

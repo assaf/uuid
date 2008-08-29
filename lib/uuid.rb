@@ -60,7 +60,7 @@ require 'macaddr'
 
 class UUID
 
-  VERSION = '2.0.0'
+  VERSION = '2.0.1'
 
   ##
   # Clock multiplier. Converts Time (resolution: seconds) to UUID clock
@@ -160,7 +160,8 @@ class UUID
     if File.exist?(self.class.state_file) then
       next_sequence
     else
-      @mac = Mac.addr.gsub(':', '').hex & 0x7FFFFFFFFFFF
+      @mac = Mac.addr.gsub(/:|-/, '').hex & 0x7FFFFFFFFFFF
+      fail "Cannot determine MAC address from any available interface, tried with #{Mac.addr}" if @mac == 0
       @sequence = rand 0x10000
 
       open_lock 'w' do |io|
@@ -240,7 +241,7 @@ class UUID
   end
 
   def inspect
-    mac = ("%08x" % @mac).scan(/[0-9a-f]{2}/).join(':')
+    mac = ("%012x" % @mac).scan(/[0-9a-f]{2}/).join(':')
     "MAC: #{mac}  Sequence: #{@sequence}"
   end
 
