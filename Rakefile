@@ -71,14 +71,6 @@ end
 task 'release'=>['setup', 'test', 'package'] do
   
   require 'rubyforge'
-=begin  
-  header = File.readlines('CHANGELOG').first
-  version, date = header.scan(/(\d+\.\d+\.\d+) \((\d{4}-\d{2}-\d{2})\)/).first
-  fail "CHANGELOG and spec version numbers do not match: #{version} != #{spec.version}" unless version == spec.version.to_s
-  today = Time.now.strftime('%Y-%m-%d')
-  fail "CHANGELOG entry not using today's date: #{date} != #{today}" unless date = today
-
-=end
   changes = File.read('CHANGELOG')[/\d+.\d+.\d+.*\n((:?^[^\n]+\n)*)/]
   File.open '.changes', 'w' do |file|
     file.write changes
@@ -90,7 +82,7 @@ task 'release'=>['setup', 'test', 'package'] do
   rubyforge.configure
   rubyforge.login    
   rubyforge.userconfig.merge! 'release_changes'=>'.changes', 'preformatted'=>true
-  rubyforge.add_release spec.rubyforge_project.downcase, spec.name.downcase, spec.version, *files
+  rubyforge.add_release spec.rubyforge_project.downcase, spec.name.downcase, spec.version.to_s, *files
   rm_f '.changes'
   puts "Release #{spec.version} uploaded"
 end
