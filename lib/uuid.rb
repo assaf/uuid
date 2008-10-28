@@ -3,7 +3,6 @@
 #
 # Author:: Assaf Arkin  assaf@labnotes.org
 #          Eric Hodel drbrain@segment7.net
-# Documentation:: http://trac.labnotes.org/cgi-bin/trac.cgi/wiki/Ruby/UuidGenerator
 # Copyright:: Copyright (c) 2005-2008 Assaf Arkin, Eric Hodel
 # License:: MIT and/or Creative Commons Attribution-ShareAlike
 
