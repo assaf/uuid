@@ -4,7 +4,6 @@ require 'rubygems'
 require 'rake/testtask'
 require 'rake/rdoctask'
 require 'rake/gempackagetask'
-require 'rubygems/source_info_cache'
 
 
 spec = Gem::Specification.load(File.join(File.dirname(__FILE__), 'uuid.gemspec'))
@@ -15,16 +14,18 @@ task 'default' => ['test', 'rdoc']
 
 desc "If you're building from sources, run this task first to setup the necessary dependencies"
 task 'setup' do
-  windows = Config::CONFIG['host_os'] =~ /windows|cygwin|bccwin|cygwin|djgpp|mingw|mswin|wince/i
-  rb_bin = File.expand_path(Config::CONFIG['ruby_install_name'], Config::CONFIG['bindir'])
-  spec.dependencies.select { |dep| Gem::SourceIndex.from_installed_gems.search(dep).empty? }.each do |missing|
-    dep = Gem::Dependency.new(missing.name, missing.version_requirements)
-    spec = Gem::SourceInfoCache.search(dep, true, true).last
-    fail "#{dep} not found in local or remote repository!" unless spec
-    puts "Installing #{spec.full_name} ..."
-    args = [rb_bin, '-S', 'gem', 'install', spec.name, '-v', spec.version.to_s]
-    args.unshift('sudo') unless windows || ENV['GEM_HOME']
-    sh args.map{ |a| a.inspect }.join(' ')
+  missing = spec.dependencies.select { |dep| Gem::SourceIndex.from_installed_gems.search(dep).empty? }
+  missing.each do |dep|
+    if Gem::SourceIndex.from_installed_gems.search(dep).empty?
+      puts "Installing #{dep.name} ..."
+      rb_bin = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name'])
+      args = []
+      args << rb_bin << '-S' << 'gem' << 'install' << dep.name
+      args << '--version' << dep.version_requirements.to_s
+      args << '--source' << 'http://gems.rubyforge.org'
+      args << '--install-dir' << ENV['GEM_HOME'] if ENV['GEM_HOME']
+      sh *args
+    end
   end
 end
 

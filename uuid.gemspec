@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |spec|
   spec.name = 'uuid'
-  spec.version = '2.0.1'
+  spec.version = '2.0.2'
   spec.summary = "UUID generator"
   spec.description = <<-EOF
 UUID generator for producing universally unique identifiers based on RFC 4122
@@ -12,7 +12,7 @@ EOF
   spec.homepage = 'http://github.com/assaf/uuid'
   spec.rubyforge_project = 'reliable-msg'
 
-  spec.files = Dir['{bin,test,lib,docs}/**/*', 'README.rdoc', 'MIT-LICENSE', 'Rakefile', 'CHANGELOG']
+  spec.files = Dir['{bin,test,lib,docs}/**/*', 'README.rdoc', 'MIT-LICENSE', 'Rakefile', 'CHANGELOG', 'uuid.gemspec']
   spec.has_rdoc = true
   spec.rdoc_options << '--main' << 'README.rdoc' << '--title' <<  'UUID generator' << '--line-numbers'
                        '--webcvs' << 'http://github.com/assaf/uuid'

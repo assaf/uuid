@@ -1,3 +1,7 @@
+2.0.2 (2009-06-10)
+* Maintenance release. Added uuid.gemspec file in packaging, tested against
+Ruby 1.9.1.
+
 2.0.1 (2008-08-28)
 * Fixed:    MAC address parses correctly when using colon as separator, not
             when using hyphen (ruby-mingw32). If your MAC address is all zero
