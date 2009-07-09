@@ -150,6 +150,12 @@ class UUID
   end
 
   ##
+  # Specify the path of the state file.
+  def self.state_file=(path)
+    @state_file = path
+  end
+
+  ##
   # Create a new UUID generator.  You really only need to do this once.
   def initialize
     @drift = 0

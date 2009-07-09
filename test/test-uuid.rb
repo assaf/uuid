@@ -14,7 +14,13 @@ class TestUUID < Test::Unit::TestCase
     UUID.new.generate
     File.exist?(path)
   end
-  
+
+  def test_state_file_specify
+    path = File.join("path", "to", "ruby-uuid")
+    UUID.state_file = path
+    assert_equal path, UUID.state_file
+  end
+
   def test_instance_generate
     uuid = UUID.new
     assert_match(/\A[\da-f]{32}\z/i, uuid.generate(:compact))
