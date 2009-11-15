@@ -10,9 +10,8 @@ EOF
   spec.authors << 'Assaf Arkin' << 'Eric Hodel'
   spec.email = 'assaf@labnotes.org'
   spec.homepage = 'http://github.com/assaf/uuid'
-  spec.rubyforge_project = 'reliable-msg'
 
-  spec.files = Dir['{bin,test,lib,docs}/**/*', 'README.rdoc', 'MIT-LICENSE', 'Rakefile', 'CHANGELOG', 'uuid.gemspec']
+  spec.files = Dir['{bin,test,lib,docs}/**/*'] + ['README.rdoc', 'MIT-LICENSE', 'Rakefile', 'CHANGELOG', 'uuid.gemspec']
   spec.has_rdoc = true
   spec.rdoc_options << '--main' << 'README.rdoc' << '--title' <<  'UUID generator' << '--line-numbers'
                        '--webcvs' << 'http://github.com/assaf/uuid'
