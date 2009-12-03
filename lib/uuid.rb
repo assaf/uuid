@@ -156,6 +156,15 @@ class UUID
   end
 
   ##
+  # Returns true if +uuid+ is in compact, default or urn formats.  Does not
+  # validate the layout (RFC 4122 section 4) of the UUID.
+  def self.validate(uuid)
+    return true if uuid =~ /\A[\da-f]{32}\z/
+    return true if
+      uuid =~ /\A(urn:uuid:)?[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\z/
+  end
+
+  ##
   # Create a new UUID generator.  You really only need to do this once.
   def initialize
     @drift = 0
@@ -283,5 +292,5 @@ protected
 
     io.write [mac1, mac2, @sequence, @last_clock].pack(STATE_FILE_FORMAT)
   end
-  
+
 end

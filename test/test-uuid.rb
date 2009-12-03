@@ -38,7 +38,7 @@ class TestUUID < Test::Unit::TestCase
     assert_equal 'invalid UUID format :unknown', e.message
   end
 
-  def test_class_generate    uuid = UUID.new
+  def test_class_generate
     assert_match(/\A[\da-f]{32}\z/i, UUID.generate(:compact))
 
     assert_match(/\A[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\z/i,
@@ -53,6 +53,15 @@ class TestUUID < Test::Unit::TestCase
     assert_equal 'invalid UUID format :unknown', e.message
   end
 
+  def test_class_validate
+    assert !UUID.validate('')
+
+    assert  UUID.validate('01234567abcd8901efab234567890123'), 'compact'
+    assert  UUID.validate('01234567-abcd-8901-efab-234567890123'), 'default'
+    assert  UUID.validate('urn:uuid:01234567-abcd-8901-efab-234567890123'),
+            'urn'
+  end
+
   def test_monotonic
     seen = {}
     uuid_gen = UUID.new
@@ -63,7 +72,7 @@ class TestUUID < Test::Unit::TestCase
       seen[uuid] = true
     end
   end
-  
+
   def test_same_mac
     class << foo = UUID.new
       attr_reader :mac
@@ -73,7 +82,7 @@ class TestUUID < Test::Unit::TestCase
     end
     assert_equal foo.mac, bar.mac
   end
-  
+
   def test_increasing_sequence
     class << foo = UUID.new
       attr_reader :sequence
