@@ -159,9 +159,9 @@ class UUID
   # Returns true if +uuid+ is in compact, default or urn formats.  Does not
   # validate the layout (RFC 4122 section 4) of the UUID.
   def self.validate(uuid)
-    return true if uuid =~ /\A[\da-f]{32}\z/
+    return true if uuid =~ /\A[\da-f]{32}\z/i
     return true if
-      uuid =~ /\A(urn:uuid:)?[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\z/
+      uuid =~ /\A(urn:uuid:)?[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\z/i
   end
 
   ##
