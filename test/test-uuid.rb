@@ -60,6 +60,11 @@ class TestUUID < Test::Unit::TestCase
     assert  UUID.validate('01234567-abcd-8901-efab-234567890123'), 'default'
     assert  UUID.validate('urn:uuid:01234567-abcd-8901-efab-234567890123'),
             'urn'
+
+    assert  UUID.validate('01234567ABCD8901EFAB234567890123'), 'compact'
+    assert  UUID.validate('01234567-ABCD-8901-EFAB-234567890123'), 'default'
+    assert  UUID.validate('urn:uuid:01234567-ABCD-8901-EFAB-234567890123'),
+            'urn'
   end
 
   def test_monotonic
