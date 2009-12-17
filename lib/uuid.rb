@@ -59,7 +59,16 @@ require 'macaddr'
 
 class UUID
 
-  VERSION = '2.0.1'
+  # Version number.
+  module Version
+    version = Gem::Specification.load(File.expand_path("../uuid.gemspec", File.dirname(__FILE__))).version.to_s.split(".").map { |i| i.to_i }
+    MAJOR = version[0]
+    MINOR = version[1]
+    PATCH = version[2]
+    STRING = "#{MAJOR}.#{MINOR}.#{PATCH}"
+  end
+
+  VERSION = Version::STRING
 
   ##
   # Clock multiplier. Converts Time (resolution: seconds) to UUID clock

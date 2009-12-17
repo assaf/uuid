@@ -1,3 +1,6 @@
+2.1.0 (2009-12-16)
+* Added uuid.validate -- easier to implement than explain why it's wrong.
+
 2.0.2 (2009-06-10)
 * Maintenance release. Added uuid.gemspec file in packaging, tested against
 Ruby 1.9.1.
