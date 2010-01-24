@@ -180,7 +180,7 @@ class UUID
     @last_clock = (Time.now.to_f * CLOCK_MULTIPLIER).to_i
     @mutex = Mutex.new
 
-    if File.exist?(self.class.state_file) then
+    if File.size?(self.class.state_file) then
       next_sequence
     else
       @mac = Mac.addr.gsub(/:|-/, '').hex & 0x7FFFFFFFFFFF
