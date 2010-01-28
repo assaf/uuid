@@ -3,7 +3,7 @@
 #
 # Author:: Assaf Arkin  assaf@labnotes.org
 #          Eric Hodel drbrain@segment7.net
-# Copyright:: Copyright (c) 2005-2008 Assaf Arkin, Eric Hodel
+# Copyright:: Copyright (c) 2005-2010 Assaf Arkin, Eric Hodel
 # License:: MIT and/or Creative Commons Attribution-ShareAlike
 
 require 'fileutils'

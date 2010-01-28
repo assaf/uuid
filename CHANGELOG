@@ -1,3 +1,6 @@
+2.1.1 (2010-01-27)
+* Fixed bug which caused UUID.new to fail if the state file was somehow extant but empty
+
 2.1.0 (2009-12-16)
 * Added uuid.validate -- easier to implement than explain why it's wrong.
 
