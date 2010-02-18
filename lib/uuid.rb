@@ -132,7 +132,7 @@ class UUID
   #
   # State files are not portable across machines.
   def self.state_file(mode = 0644)
-    return @state_file if @state_file
+    return @state_file unless @state_file.nil?
 
     @mode = mode
 
@@ -159,7 +159,11 @@ class UUID
   end
 
   ##
-  # Specify the path of the state file.
+  # Specify the path of the state file.  Use this if you need a different
+  # location for your state file.
+  #
+  # Set to false if your system cannot use a state file (e.g. many shared
+  # hosts).
   def self.state_file=(path)
     @state_file = path
   end
@@ -180,15 +184,18 @@ class UUID
     @last_clock = (Time.now.to_f * CLOCK_MULTIPLIER).to_i
     @mutex = Mutex.new
 
-    if File.size?(self.class.state_file) then
+    state_file = self.class.state_file
+    if state_file && File.size?(state_file) then
       next_sequence
     else
       @mac = Mac.addr.gsub(/:|-/, '').hex & 0x7FFFFFFFFFFF
       fail "Cannot determine MAC address from any available interface, tried with #{Mac.addr}" if @mac == 0
       @sequence = rand 0x10000
 
-      open_lock 'w' do |io|
-        write_state io
+      if state_file
+        open_lock 'w' do |io|
+          write_state io
+        end
       end
     end
   end
@@ -244,15 +251,19 @@ class UUID
   ##
   # Updates the state file with a new sequence number.
   def next_sequence
-    open_lock 'r+' do |io|
-      @mac, @sequence, @last_clock = read_state(io)
+    if self.class.state_file
+      open_lock 'r+' do |io|
+        @mac, @sequence, @last_clock = read_state(io)
 
-      io.rewind
-      io.truncate 0
+        io.rewind
+        io.truncate 0
 
+        @sequence += 1
+
+        write_state io
+      end
+    else
       @sequence += 1
-
-      write_state io
     end
   rescue Errno::ENOENT
     open_lock 'w' do |io|

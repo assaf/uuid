@@ -68,6 +68,12 @@ writable, the file is created as <tt>.ruby-uuid</tt> in the home directory.
 If you need to create the file with a different mode, use UUID#state_file
 before running the UUID generator.
 
+Note: If you are running on a shared host where the state file is not shared
+between processes, or persisted across restarts (e.g. Heroku, Google App
+Engine) you can simple turn it off:
+
+  UUID.state_file = false
+
 State files are not portable across machines.
 
 

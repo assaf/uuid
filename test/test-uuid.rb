@@ -21,6 +21,16 @@ class TestUUID < Test::Unit::TestCase
     assert_equal path, UUID.state_file
   end
 
+  def test_with_no_state_file
+    UUID.state_file = false
+    assert !UUID.state_file
+    uuid = UUID.new
+    assert_match(/\A[\da-f]{32}\z/i, uuid.generate(:compact))
+    seq = uuid.next_sequence
+    assert_equal seq + 1, uuid.next_sequence
+    assert !UUID.state_file
+  end
+
   def test_instance_generate
     uuid = UUID.new
     assert_match(/\A[\da-f]{32}\z/i, uuid.generate(:compact))
