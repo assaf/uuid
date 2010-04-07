@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+require "uuid"
+require "optparse"
+
+address = nil 
+count = 1
+format = :default
+server = false
+
+opts = OptionParser.new("", 24, '  ') do |opts|
+  opts.banner = "Usage: #{File.basename($0)} [options]"
+
+  opts.separator "\nOptions:"
+  opts.on("-s", "--socket {HOST:PORT|PATH}",
+          "communicate on HOST:PORT or PATH (default: #{UUID::SOCKET_NAME})") do |value|
+    address = value
+  end
+
+  opts.on("-S", "--server", "run as a server") do |value|
+    server = value ? true : false
+  end
+
+  opts.on("-F", "--format {FORMAT}", "UUID format (client only)") do |value|
+    format = value.to_sym
+  end
+
+  opts.on("-C", "--count {COUNT}", "returns give number of UUIDs") do |value|
+    count = value.to_i
+  end
+
+  opts.on("-h", "--help", "Show this message") do
+    puts opts.to_s.gsub(/^.*DEPRECATED.*$/s, '')
+    exit
+  end
+
+  opts.on("-v", "--version", "Show version") do
+    puts "UUID v#{UUID::VERSION}"
+    exit
+  end
+
+  opts.parse! ARGV
+end
+
+
+if server
+  $stdout << "Starting UUID server on #{address}\n"
+  UUID::Server.new.listen(address || UUID::SOCKET_NAME)
+else
+  UUID.server = address if address
+  $stdout << UUID.generate(format)
+  (count - 1).times do
+    $stdout.putc "\n"
+    $stdout << UUID.generate(format)
+  end
+end

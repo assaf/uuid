@@ -76,15 +76,34 @@ Engine) you can simple turn it off:
 
 State files are not portable across machines.
 
+Note: when using a forking server (Unicorn, Resque, Pipemaster, etc) you don't
+want your forked processes using the same sequence number.  Make sure to
+increment the sequence number each time a worker forks.
+
+For example, in config/unicorn.rb:
+
+  after_fork do |server, worker|
+    UUID.generator.next_sequence
+  end
+
+
+== Command Line
+
+You can run uuid from the command line, generating new UUID to stdout:
+
+  $ uuid
+
+Multiple UUIDs in a sequence, separated with a newline:
+
+  $ uuid --count 10
+
+You can also run client and server from the command line
+
+  $ uuid --server &
+  $ uuid --socket /var/lib/uuid.sock
+
 
 == Latest and Greatest
-
-Stable release are made through RubyForge, to upgrade simply:
-
-  gem upgrade uuid
-
-You can subscribe for notifications of new releases through the reliable-msg
-project page at http://rubyforge.org/projects/reliable-msg
 
 Source code and documentation hosted on Github: http://github.com/assaf/uuid
 

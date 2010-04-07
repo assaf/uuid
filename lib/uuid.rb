@@ -9,8 +9,7 @@
 require 'fileutils'
 require 'thread'
 require 'tmpdir'
-
-require 'rubygems'
+require 'socket'
 require 'macaddr'
 
 
@@ -120,6 +119,24 @@ class UUID
   def self.generate(format = :default)
     @uuid ||= new
     @uuid.generate format
+  end
+
+  ##
+  # Returns the UUID generator used by generate.  Useful if you need to mess
+  # with it, e.g. force next sequence when forking (e.g. Unicorn, Resque):
+  #
+  # after_fork do
+  #   UUID.generator.next_sequence
+  # end
+  def self.generator
+    @uuid ||= new
+  end
+
+  ##
+  # Call this to use a UUID Server.  Expects address to bind to (SOCKET_NAME is
+  # a good default)
+  def self.server=(address)
+    @uuid = Client.new(address) unless Client === @uuid
   end
 
   ##
@@ -311,6 +328,116 @@ protected
     mac1 = (@mac >> 32) & 0xffff
 
     io.write [mac1, mac2, @sequence, @last_clock].pack(STATE_FILE_FORMAT)
+  end
+
+
+  # You don't have to use this, it's just a good default.
+  SOCKET_NAME ="/var/lib/uuid.sock"
+
+  # With UUID server you don't have to worry about multiple processes
+  # synchronizing over the state file, calling next_sequence when forking a
+  # process and other things you're probably not worried about (because
+  # statistically they're very unlikely to break your code).
+  #
+  # But if you are worried about and thought to yourself, "what would a simple
+  # UUID server look like?", here's the answer.  The protocol is dead simple:
+  # client sends a byte, server responds with a UUID.  Can use TCP or domain
+  # sockets.
+  class Server
+
+    # Create new server.  Nothing interesting happens until you call listen.
+    def initialize()
+      @generator = UUID.new
+    end
+
+    # Start the server listening on the specific address.  Blocks and never
+    # returns.  Address can be:
+    # - A Socket object
+    # - UNIX domain socket name (e.g. /var/run/uuid.sock, must start with /)
+    # - IP address, colon, port (e.g. localhost:1337)
+    def listen(address)
+      sock = bind(address)
+      while client = sock.accept
+        Thread.start(client) do |client|
+          while client.read 1
+            client.write @generator.generate
+          end
+        end
+      end
+    end
+
+    # Returns UNIXServer or TCPServer from address.  Returns argument if not a
+    # string, so can pass through (see #listen).
+    def bind(address)
+      return address unless String === address
+      if address[0] == ?/
+        if File.exist?(address)
+          raise ArgumentError, "#{address} is not a socket" unless File.socket?(address)
+          File.unlink(address)
+        end
+        sock = UNIXServer.new(address)
+        File.chmod 0666, address
+      elsif address =~ /^(\d+\.\d+\.\d+\.\d+):(\d+)$/
+        sock = TCPServer.new($1, $2.to_i)
+      else
+        raise ArgumentError, "Don't know how to bind #{address}"
+      end
+      sock.setsockopt(IPPROTO_TCP, TCP_NODELAY, 1) if defined?(TCP_NODELAY)
+      sock
+    end
+
+  end
+
+
+  # Every server needs a client.  Client provides you with the single ultimate
+  # method: #generate.  Typically you'll use this instead of the local UUID
+  # generator:
+  #   UUID.server = UUID::SOCKET_NAME
+  class Client
+
+    def initialize(address)
+      @socket = connect(address)
+      at_exit { close }
+    end
+
+    # Talks to server and returns new UUID in specified format.
+    def generate(format = :default)
+      @socket.write "\0"
+      uuid = @socket.read(36)
+      return uuid if format == :default
+      template = FORMATS[format]
+      raise ArgumentError, "invalid UUID format #{format.inspect}" unless template
+      template % uuid.split("-").map { |p| p.to_i(16) }
+    end
+
+    # Returns UNIXSocket or TCPSocket from address.  Returns argument if not a
+    # string, so can pass through.
+    def connect(address)
+      return address unless String === address
+      if address[0] == ?/
+        sock = UNIXSocket.new(address)
+      elsif address =~ /^(\d+\.\d+\.\d+\.\d+):(\d+)$/
+        sock = TCPSocket.new($1, $2.to_i)
+      else
+        raise ArgumentError, "Don't know how to connect to #{address}"
+      end
+      sock.setsockopt(IPPROTO_TCP, TCP_NODELAY, 1) if defined?(TCP_NODELAY)
+      sock
+    end
+
+    def next_sequence #:nodoc: Stubbed to do nothing.
+    end
+
+    def inspect
+      @socket ? "Server on #{Socket.unpack_sockaddr_in(@socket.getsockname).reverse!.join(':')}" : "Connection closed"
+    end
+
+    # Close the socket.
+    def close
+      @socket.shutdown if @socket
+      @socket = nil
+    end
+
   end
 
 end

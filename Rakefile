@@ -8,24 +8,6 @@ desc "Default Task"
 task :default => :test
 
 
-desc "If you're building from sources, run this task first to setup the necessary dependencies"
-task 'setup' do
-  missing = spec.dependencies.select { |dep| Gem::SourceIndex.from_installed_gems.search(dep).empty? }
-  missing.each do |dep|
-    if Gem::SourceIndex.from_installed_gems.search(dep).empty?
-      puts "Installing #{dep.name} ..."
-      rb_bin = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name'])
-      args = []
-      args << rb_bin << '-S' << 'gem' << 'install' << dep.name
-      args << '--version' << dep.version_requirements.to_s
-      args << '--source' << 'http://gems.rubyforge.org'
-      args << '--install-dir' << ENV['GEM_HOME'] if ENV['GEM_HOME']
-      sh *args
-    end
-  end
-end
-
-
 desc "Run all test cases"
 Rake::TestTask.new do |test|
   test.verbose = true

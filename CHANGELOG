@@ -1,3 +1,9 @@
+2.3.0 (2010-04-07)
+* Added: UUID.generator returns the current UUID generator.  Particularly useful for calling
+  next_sequence on the generator when forking a process.
+* Added: UUID::Server and UUID::Client so you can have one process serving you UUIDs.
+* Added: UUID command line tool.  Yay!
+
 2.2.0 (2010-02-18)
 * Added: set UUID.state_file = false if you cannot use a state file (e.g. shared hosting environment)
 
