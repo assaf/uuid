@@ -23,7 +23,7 @@ end
 
 
 
-desc "Push new release to gemcutter and git tag"
+desc "Push new release to rubyforge and git tag"
 task :push do
   sh "git push"
   puts "Tagging version #{spec.version} .."
@@ -37,6 +37,5 @@ end
 desc "Install #{spec.name} locally"
 task :install do
   sh "gem build #{spec.name}.gemspec"
-  sudo = "sudo" unless File.writable?( Gem::ConfigMap[:bindir])
-  sh "#{sudo} gem install #{spec.name}-#{spec.version}.gem"
+  sh "gem install #{spec.name}-#{spec.version}.gem"
 end

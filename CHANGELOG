@@ -1,3 +1,6 @@
+2.3.1 (2010-05-07)
+* Fix: Open state file in binary mode (http://github.com/assaf/uuid/issues#issue/8)
+
 2.3.0 (2010-04-07)
 * Added: UUID.generator returns the current UUID generator.  Particularly useful for calling
   next_sequence on the generator when forking a process.

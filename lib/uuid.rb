@@ -210,7 +210,7 @@ class UUID
       @sequence = rand 0x10000
 
       if state_file
-        open_lock 'w' do |io|
+        open_lock 'wb' do |io|
           write_state io
         end
       end
@@ -269,7 +269,7 @@ class UUID
   # Updates the state file with a new sequence number.
   def next_sequence
     if self.class.state_file
-      open_lock 'r+' do |io|
+      open_lock 'rb+' do |io|
         @mac, @sequence, @last_clock = read_state(io)
 
         io.rewind
