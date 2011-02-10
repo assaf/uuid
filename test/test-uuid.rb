@@ -4,6 +4,7 @@
 # License:: MIT and/or Creative Commons Attribution-ShareAlike
 
 require 'test/unit'
+require 'rubygems'
 require 'uuid'
 
 class TestUUID < Test::Unit::TestCase
@@ -31,8 +32,7 @@ class TestUUID < Test::Unit::TestCase
     assert !UUID.state_file
   end
 
-  def test_instance_generate
-    uuid = UUID.new
+  def validate_uuid_generator(uuid)
     assert_match(/\A[\da-f]{32}\z/i, uuid.generate(:compact))
 
     assert_match(/\A[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\z/i,
@@ -44,8 +44,13 @@ class TestUUID < Test::Unit::TestCase
     e = assert_raise ArgumentError do
       uuid.generate :unknown
     end
-
     assert_equal 'invalid UUID format :unknown', e.message
+
+  end
+
+  def test_instance_generate
+    uuid = UUID.new
+    validate_uuid_generator(uuid)
   end
 
   def test_class_generate
@@ -106,6 +111,16 @@ class TestUUID < Test::Unit::TestCase
       attr_reader :sequence
     end
     assert_equal foo.sequence + 1, bar.sequence
+  end
+
+  def test_pseudo_random_mac_address
+    uuid_gen = UUID.new
+    def Mac.addr; '00:00:00:00:00:00'; end
+    assert uuid_gen.iee_mac_address == 0
+    [:compact, :default, :urn].each do |format|
+      assert UUID.validate(uuid_gen.generate(format)), format.to_s
+    end
+    validate_uuid_generator(uuid_gen)
   end
 
 end
