@@ -229,7 +229,11 @@ class UUID
   # Uses system calls to get a mac address
   #
   def iee_mac_address
-    Mac.addr.gsub(/:|-/, '').hex & 0x7FFFFFFFFFFF
+    begin
+      Mac.addr.gsub(/:|-/, '').hex & 0x7FFFFFFFFFFF
+    rescue
+      0 
+    end
   end
 
   ##
