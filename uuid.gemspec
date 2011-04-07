@@ -14,7 +14,6 @@ EOF
   spec.files = Dir['{bin,test,lib,docs}/**/*'] + ['README.rdoc', 'MIT-LICENSE', 'Rakefile', 'CHANGELOG', 'uuid.gemspec']
   spec.executables = "uuid"
   
-  spec.has_rdoc = true
   spec.rdoc_options << '--main' << 'README.rdoc' << '--title' <<  'UUID generator' << '--line-numbers'
                        '--webcvs' << 'http://github.com/assaf/uuid'
   spec.extra_rdoc_files = ['README.rdoc', 'MIT-LICENSE']
