@@ -11,6 +11,7 @@ require 'thread'
 require 'tmpdir'
 require 'socket'
 require 'macaddr'
+require 'digest/sha1'
 
 
 ##
@@ -195,6 +196,55 @@ class UUID
   end
 
   ##
+  # Generate a pseudo MAC address because we have no pure-ruby way
+  # to know  the MAC  address of the  NIC this system  uses.  Note
+  # that cheating  with pseudo arresses here  is completely legal:
+  # see Section 4.5 of RFC4122 for details.
+  #
+  # This implementation is shamelessly stolen from
+  #  https://github.com/spectra/ruby-uuid/blob/master/uuid.rb
+  # Thanks spectra.
+  #
+  def pseudo_mac_address
+    sha1 = ::Digest::SHA1.new
+    256.times do
+      r = [rand(0x100000000)].pack "N"
+      sha1.update r
+    end
+    str = sha1.digest
+    r = rand 14 # 20-6
+    node = str[r, 6] || str
+    if RUBY_VERSION >= "1.9.0"
+      nnode = node.bytes.to_a
+      nnode[0] |= 0x01
+      node = ''
+      nnode.each { |s| node << s.chr }
+    else
+      node[0] |= 0x01 # multicast bit
+    end
+    node.bytes.collect{|b|b.to_s(16)}.join.hex & 0x7FFFFFFFFFFF
+  end
+
+  ##
+  # Uses system calls to get a mac address
+  #
+  def iee_mac_address
+    begin
+      Mac.addr.gsub(/:|-/, '').hex & 0x7FFFFFFFFFFF
+    rescue
+      0 
+    end
+  end
+
+  ##
+  # return iee_mac_address if available, pseudo_mac_address otherwise
+  #
+  def mac_address
+    return iee_mac_address unless iee_mac_address == 0
+    return pseudo_mac_address
+  end
+
+  ##
   # Create a new UUID generator.  You really only need to do this once.
   def initialize
     @drift = 0
@@ -205,8 +255,8 @@ class UUID
     if state_file && File.size?(state_file) then
       next_sequence
     else
-      @mac = Mac.addr.gsub(/:|-/, '').hex & 0x7FFFFFFFFFFF
-      fail "Cannot determine MAC address from any available interface, tried with #{Mac.addr}" if @mac == 0
+      @mac = mac_address
+      fail "Cannot determine MAC address from any available interface, tried with #{mac_address}" if @mac == 0
       @sequence = rand 0x10000
 
       if state_file
