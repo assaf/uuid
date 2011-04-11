@@ -1,4 +1,11 @@
 source :rubygems
-gem "macaddr"
-gem "rake"
-gem "yard"
+gemspec
+
+group :development do
+  gem "rake"
+  gem "yard"
+end
+
+group :test do
+  gem "mocha"
+end

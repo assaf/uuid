@@ -6,6 +6,7 @@
 require 'test/unit'
 require 'rubygems'
 require 'uuid'
+require 'mocha'
 
 class TestUUID < Test::Unit::TestCase
 
@@ -115,7 +116,7 @@ class TestUUID < Test::Unit::TestCase
 
   def test_pseudo_random_mac_address
     uuid_gen = UUID.new
-    def Mac.addr; '00:00:00:00:00:00'; end
+    Mac.stubs(:addr).returns "00:00:00:00:00:00"
     assert uuid_gen.iee_mac_address == 0
     [:compact, :default, :urn].each do |format|
       assert UUID.validate(uuid_gen.generate(format)), format.to_s
