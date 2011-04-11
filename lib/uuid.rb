@@ -408,9 +408,9 @@ protected
     def listen(address)
       sock = bind(address)
       while client = sock.accept
-        Thread.start(client) do |client|
-          while client.read 1
-            client.write @generator.generate
+        Thread.start(client) do |socket|
+          while socket.read 1
+            socket.write @generator.generate
           end
         end
       end
