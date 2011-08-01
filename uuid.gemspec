@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'uuid'
-  s.version = '2.3.2'
+  s.version = '2.3.3'
   s.summary = "UUID generator"
   s.description = <<-EOF
 UUID generator for producing universally unique identifiers based on RFC 4122
