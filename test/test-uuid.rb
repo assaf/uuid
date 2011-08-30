@@ -17,6 +17,19 @@ class TestUUID < Test::Unit::TestCase
     File.exist?(path)
   end
 
+  def test_state_file_creation_mode
+    UUID.class_eval{ @state_file = nil; @mode = nil }
+    UUID.state_file 0666
+    path = UUID.state_file
+    File.delete path if File.exist?(path)
+
+    old_umask = File.umask(0022)
+    UUID.new.generate
+    File.umask(old_umask)
+
+    assert_equal '0666', sprintf('%04o', File.stat(path).mode & 0777)
+  end
+
   def test_state_file_specify
     path = File.join("path", "to", "ruby-uuid")
     UUID.state_file = path
