@@ -259,6 +259,9 @@ class UUID
       fail "Cannot determine MAC address from any available interface, tried with #{mac_address}" if @mac == 0
       @sequence = rand 0x10000
 
+      # Ensure the mode is respected, even with a restrictive umask
+      File.open(state_file, 'w') { |f| f.chmod(self.class.mode) } if state_file && !File.exists?(state_file)
+
       if state_file
         open_lock 'wb' do |io|
           write_state io
