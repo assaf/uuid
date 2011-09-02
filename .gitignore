@@ -1,2 +1,4 @@
+.bundle
 *.swp
 /html
+*.gem
