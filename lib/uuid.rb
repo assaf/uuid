@@ -194,6 +194,16 @@ class UUID
     return true if
       uuid =~ /\A(urn:uuid:)?[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}\z/i
   end
+  
+  ##
+  # Uses a system call to interrogate the interfaces for a system address
+  # once. This is cached at the class level to avoid future instances
+  # of the class from having to do a system call. This call is particularly
+  # expensive for JRuby.
+  def self.iee_mac_address
+    @iee_mac_address
+  end
+  @iee_mac_address = Mac.addr.gsub(/:|-/, '').hex & 0x7FFFFFFFFFFF rescue 0
 
   ##
   # Generate a pseudo MAC address because we have no pure-ruby way
@@ -229,11 +239,7 @@ class UUID
   # Uses system calls to get a mac address
   #
   def iee_mac_address
-    begin
-      Mac.addr.gsub(/:|-/, '').hex & 0x7FFFFFFFFFFF
-    rescue
-      0 
-    end
+    self.class.iee_mac_address
   end
 
   ##
