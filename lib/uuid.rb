@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # = uuid.rb - UUID generator
 #
@@ -26,7 +27,7 @@ require 'digest/sha1'
 # For example:
 #
 #   uuid = UUID.new
-#   
+#
 #   10.times do
 #     p uuid.generate
 #   end
@@ -232,7 +233,7 @@ class UUID
     begin
       Mac.addr.gsub(/:|-/, '').hex & 0x7FFFFFFFFFFF
     rescue
-      0 
+      0
     end
   end
 

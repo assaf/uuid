@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # Author:: Assaf Arkin  assaf@labnotes.org
 #          Eric Hodel drbrain@segment7.net
 # Copyright:: Copyright (c) 2005-2008 Assaf Arkin, Eric Hodel
