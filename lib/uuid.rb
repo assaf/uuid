@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # = uuid.rb - UUID generator
 #
