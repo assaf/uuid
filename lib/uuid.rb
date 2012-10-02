@@ -114,6 +114,10 @@ class UUID
     @mode
   end
 
+  def self.mode=(mode)
+    @mode = mode
+  end
+
   ##
   # Generates a new UUID string using +format+.  See FORMATS for a list of
   # supported formats.
@@ -185,6 +189,7 @@ class UUID
   # hosts).
   def self.state_file=(path)
     @state_file = path
+    @mode ||= 0644
   end
 
   ##
