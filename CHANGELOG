@@ -1,3 +1,16 @@
+2.3.6 (2012-11-18)
+
+Manually setting the state_file path sets mode too (Tom Lea).
+
+When manually setting the state file, set the mode too.  Failure to do so
+causes an implicit conversion of nil to integer on first usage.
+
+Also provided a mode method to set the mode explicitly.
+
+
+Reverted executable loss (Michael Witrant ).
+
+
 2.3.4 (2012-01-23)
 
 Source files are now UTF-8 (Vicente Reig)

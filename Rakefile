@@ -1,5 +1,5 @@
 require 'rake/testtask'
-require 'rake/rdoctask'
+#require 'rake/rdoctask'
 
 
 spec = Gem::Specification.load(File.expand_path("uuid.gemspec", File.dirname(__FILE__)))
@@ -16,10 +16,10 @@ Rake::TestTask.new do |test|
 end
 
 # Create the documentation.
-Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_files.include "README.rdoc", "lib/**/*.rb"
-  rdoc.options = spec.rdoc_options
-end
+#Rake::RDocTask.new do |rdoc|
+#  rdoc.rdoc_files.include "README.rdoc", "lib/**/*.rb"
+#  rdoc.options = spec.rdoc_options
+#end
 
 
 
