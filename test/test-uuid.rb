@@ -39,7 +39,7 @@ class TestUUID < Test::Unit::TestCase
 
   def test_mode_is_set_on_state_file_specify
     UUID.class_eval{ @state_file = nil; @mode = nil }
-    path = File.join("/tmp", "ruby-uuid-test")
+    path = File.join(Dir.tmpdir, "ruby-uuid-test")
     File.delete path if File.exist?(path)
 
     UUID.state_file = path

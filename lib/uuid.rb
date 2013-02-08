@@ -146,7 +146,7 @@ class UUID
   end
 
   ##
-  # Creates an empty state file in /var/tmp/ruby-uuid or the windows common
+  # Creates an empty state file in #Dir.tmpdir/ruby-uuid or the windows common
   # application data directory using mode 0644.  Call with a different mode
   # before creating a UUID generator if you want to open access beyond your
   # user by default.
@@ -169,7 +169,7 @@ class UUID
 
       state_dir = File.join(path.strip)
     rescue LoadError
-      state_dir = File.join('', 'var', 'tmp')
+      state_dir = Dir.tmpdir
     end
 
     @state_file = File.join(state_dir, 'ruby-uuid')
