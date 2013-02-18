@@ -76,6 +76,10 @@ Engine) you can simple turn it off:
 
 State files are not portable across machines.
 
+If you do not use the state file, UUID generation will attempt to use your server's MAC address using the macaddr gem, which runs system commands to identify the MAC address and then cache it. Since this can take a few seconds, when using UUID.state_file = false, you should add the following line after disabling the state file:
+
+  UUID.generator.next_sequence
+
 Note: when using a forking server (Unicorn, Resque, Pipemaster, etc) you don't
 want your forked processes using the same sequence number.  Make sure to
 increment the sequence number each time a worker forks.
