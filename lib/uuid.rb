@@ -13,6 +13,7 @@ require 'tmpdir'
 require 'socket'
 require 'macaddr'
 require 'digest/sha1'
+require 'tmpdir'
 
 
 ##

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    uuid (2.3.5)
+    uuid (2.3.6)
       macaddr (~> 1.0)
 
 GEM
