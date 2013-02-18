@@ -62,7 +62,7 @@ first used by the application, to prevent multiple processes from
 generating the same set of identifiers, and deal with changes to the
 system clock.
 
-The UUID state file is created in <tt>/var/tmp/ruby-uuid</tt> or the Windows
+The UUID state file is created in <tt>#Dir.tmpdir/ruby-uuid</tt> or the Windows
 common application data directory using mode 0644.  If that directory is not
 writable, the file is created as <tt>.ruby-uuid</tt> in the home directory.
 If you need to create the file with a different mode, use UUID#state_file
