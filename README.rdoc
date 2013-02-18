@@ -76,7 +76,11 @@ Engine) you can simple turn it off:
 
 State files are not portable across machines.
 
-If you do not use the state file, UUID generation will attempt to use your server's MAC address using the macaddr gem, which runs system commands to identify the MAC address and then cache it. Since this can take a few seconds, when using UUID.state_file = false, you should add the following line after disabling the state file:
+If you do not use the state file, UUID generation will attempt to use your
+server's MAC address using the macaddr gem, which runs system commands to
+identify the MAC address and then cache it.  Since this can take a few seconds
+on some operating systems, when using UUID.state_file = false, you should add
+the following line after disabling the state file:
 
   UUID.generator.next_sequence
 
