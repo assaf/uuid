@@ -176,7 +176,7 @@ class UUID
     @state_file = File.join(state_dir, 'ruby-uuid')
 
     if !File.writable?(state_dir) || (File.exists?(@state_file) && !File.writable?(@state_file)) then
-      @state_file = File.expand_path('.ruby-uuid', '~')
+      @state_file = File.join File.expand_path('~'), '.ruby-uuid'
     end
 
     @state_file
