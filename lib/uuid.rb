@@ -60,6 +60,7 @@ require 'tmpdir'
 # For more information see {RFC 4122}[http://www.ietf.org/rfc/rfc4122.txt].
 
 class UUID
+  class InvalidSequence < RuntimeError; end
 
   # Version number.
   module Version
@@ -107,6 +108,12 @@ class UUID
   @state_file = nil
   @mode = nil
   @uuid = nil
+  @open_retry_threshold = 10
+  @open_retry_interval = 0.01
+
+  class << self
+    attr_accessor :open_retry_threshold, :open_retry_interval
+  end
 
   ##
   # The access mode of the state file.  Set it with state_file.
@@ -362,9 +369,16 @@ protected
   # Open the state file with an exclusive lock and access mode +mode+.
   def open_lock(mode)
     File.open self.class.state_file, mode, self.class.mode do |io|
+      counter = 0
+
       begin
         io.flock File::LOCK_EX
         yield io
+      rescue InvalidSequence
+        io.flock File::LOCK_UN
+        sleep self.class.open_retry_interval
+        counter += 1
+        counter < self.class.open_retry_threshold ? retry : raise
       ensure
         io.flock File::LOCK_UN
       end
@@ -374,7 +388,9 @@ protected
   ##
   # Read the state from +io+
   def read_state(io)
-    mac1, mac2, seq, last_clock = io.read(32).unpack(STATE_FILE_FORMAT)
+    data = io.read(32)
+    raise InvalidSequence if data.nil?
+    mac1, mac2, seq, last_clock = data.unpack(STATE_FILE_FORMAT)
     mac = (mac1 << 32) + mac2
 
     return mac, seq, last_clock
