@@ -10,6 +10,7 @@ EOF
   s.authors << 'Assaf Arkin' << 'Eric Hodel'
   s.email = 'assaf@labnotes.org'
   s.homepage = 'http://github.com/assaf/uuid'
+  s.license = 'MIT'
 
   s.files = Dir['{bin,test,lib,docs}/**/*'] + ['README.rdoc', 'MIT-LICENSE', 'Rakefile', 'CHANGELOG', 'uuid.gemspec']
   s.executables = "uuid"
