@@ -10,8 +10,11 @@ GEM
     macaddr (1.6.7)
       systemu (~> 2.6.2)
     mocha (0.9.12)
+    power_assert (0.3.1)
     rake (0.8.7)
     systemu (2.6.4)
+    test-unit (3.1.9)
+      power_assert
     yard (0.6.7)
 
 PLATFORMS
@@ -20,5 +23,9 @@ PLATFORMS
 DEPENDENCIES
   mocha
   rake
+  test-unit (~> 3.1.8)
   uuid!
   yard
+
+BUNDLED WITH
+   1.13.3
