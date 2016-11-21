@@ -63,7 +63,7 @@ class UUID
 
   # Version number.
   module Version
-    version = Gem::Specification.load(File.expand_path("../uuid.gemspec", File.dirname(__FILE__))).version.to_s.split(".").map { |i| i.to_i }
+    version = Gem::SourceIndex.from_installed_gems.find_name('uuid').first.version.to_s.split('.')
     MAJOR = version[0]
     MINOR = version[1]
     PATCH = version[2]
