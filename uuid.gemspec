@@ -20,4 +20,5 @@ EOF
   s.extra_rdoc_files = ['README.rdoc', 'MIT-LICENSE']
 
   s.add_dependency 'macaddr', ['~>1.0']
+  s.add_dependency 'systemu', ['~>2.4.0']
 end
