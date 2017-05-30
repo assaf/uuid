@@ -87,6 +87,10 @@ class UUID
   VERSION_CLOCK = 0x1000
 
   ##
+  # Variant number stamped into the UUID to identify it RFC4211.
+  VARIANT_CLOCK = 0x80
+
+  ##
   # Formats supported by the UUID generator.
   #
   # <tt>:default</tt>:: Produces 36 characters, including hyphens separating
@@ -320,7 +324,7 @@ class UUID
         clock        & 0xFFFFFFFF,
        (clock >> 32) & 0xFFFF,
       ((clock >> 48) & 0xFFFF | VERSION_CLOCK),
-      (@sequence >> 8) & 0xFF | 0x80,
+      (@sequence >> 8) & 0xBF | 0x80,
       @sequence & 0xFF,
       @mac           & 0xFFFFFFFFFFFF
     ]
