@@ -84,7 +84,7 @@ class UUID
 
   ##
   # Version number stamped into the UUID to identify it as time-based.
-  VERSION_CLOCK = 0x0100
+  VERSION_CLOCK = 0x1000
 
   ##
   # Formats supported by the UUID generator.
@@ -95,9 +95,9 @@ class UUID
   #                     hyphens
   # <tt>:urn</tt>:: Adds the prefix <tt>urn:uuid:</tt> to the default format
   FORMATS = {
-    :compact => '%08x%04x%04x%04x%012x',
-    :default => '%08x-%04x-%04x-%04x-%012x',
-    :urn     => 'urn:uuid:%08x-%04x-%04x-%04x-%012x',
+    :compact => '%08x%04x%04x%02x%02x%012x',
+    :default => '%08x-%04x-%04x-%02x%02x-%012x',
+    :urn     => 'urn:uuid:%08x-%04x-%04x-%02x%02x-%012x',
   }
 
   ##
@@ -320,7 +320,8 @@ class UUID
         clock        & 0xFFFFFFFF,
        (clock >> 32) & 0xFFFF,
       ((clock >> 48) & 0xFFFF | VERSION_CLOCK),
-      @sequence      & 0xFFFF,
+      (@sequence >> 8) & 0xFF | 0x80,
+      @sequence & 0xFF,
       @mac           & 0xFFFFFFFFFFFF
     ]
   end
