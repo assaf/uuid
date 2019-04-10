@@ -84,7 +84,23 @@ class UUID
 
   ##
   # Version number stamped into the UUID to identify it as time-based.
-  VERSION_CLOCK = 0x0100
+  VERSION_CLOCK = 0x1000
+
+  ##
+  # Time.at(UUID_EPOCH_OFFSET / -1e7).utc == 1582-10-15 00:00:00 UTC.
+  UUID_EPOCH_OFFSET = 0x01B21DD213814000
+
+  ##
+  # Get time as 100ns ticks since UUID epoch.
+  if Process.respond_to?(:clock_gettime)
+    def uuid_tick
+      Process.clock_gettime(Process::CLOCK_REALTIME, :nanosecond) / 100 + UUID_EPOCH_OFFSET
+    end
+  else
+    def uuid_tick
+      (Time.now.to_f * 10_000_000).to_i + UUID_EPOCH_OFFSET
+    end
+  end
 
   ##
   # Formats supported by the UUID generator.
@@ -255,7 +271,7 @@ class UUID
   # Create a new UUID generator.  You really only need to do this once.
   def initialize
     @drift = 0
-    @last_clock = (Time.now.to_f * CLOCK_MULTIPLIER).to_i
+    @last_clock = uuid_tick
     @mutex = Mutex.new
 
     state_file = self.class.state_file
@@ -296,7 +312,7 @@ class UUID
     # with the new clock.
 
     clock = @mutex.synchronize do
-      clock = (Time.new.to_f * CLOCK_MULTIPLIER).to_i & 0xFFFFFFFFFFFFFFF0
+      clock = uuid_tick & 0xFFFFFFFFFFFFFFF0
 
       if clock > @last_clock then
         @drift = 0
@@ -319,8 +335,8 @@ class UUID
     template % [
         clock        & 0xFFFFFFFF,
        (clock >> 32) & 0xFFFF,
-      ((clock >> 48) & 0xFFFF | VERSION_CLOCK),
-      @sequence      & 0xFFFF,
+      ((clock >> 48) & 0x0FFF) | VERSION_CLOCK,
+      (@sequence     & 0x3FFF) | 0x8000,
       @mac           & 0xFFFFFFFFFFFF
     ]
   end
@@ -347,7 +363,7 @@ class UUID
       write_state io
     end
   ensure
-    @last_clock = (Time.now.to_f * CLOCK_MULTIPLIER).to_i
+    @last_clock = uuid_tick
     @drift = 0
   end
 

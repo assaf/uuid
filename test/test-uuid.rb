@@ -143,6 +143,28 @@ class TestUUID < Test::Unit::TestCase
     assert_equal foo.sequence + 1, bar.sequence
   end
 
+  def test_uuidv1_fixed_bits
+    uuid = UUID.generate(:default)
+    v = uuid.gsub("-", "").to_i(16)
+    assert_equal(
+      "%x" % [0x00000000_0000_1000_8000_000000000000],
+      "%x" % [0x00000000_0000_f000_c000_000000000000 & v],
+      "unexpected bits in #{uuid}")
+  end
+
+  def test_uuidv1_time_field
+    t1 = Time.now.to_f
+    uuid = UUID.generate(:default)
+    t2 = Time.now.to_f
+    v = uuid.gsub("-", "").to_i(16)
+    time_field = (
+      (((v >> 64) & 0x0fff) << 48) |
+      (((v >> 80) & 0xffff) << 32) |
+      ((v >> 96) & 0xffff_ffff))
+    t = time_field * 1e-7 - 12219292800
+    assert_equal true, (t1 <= t && t <= t2), "invalid time in #{uuid}"
+  end
+
   def test_pseudo_random_mac_address
     uuid_gen = UUID.new
     Mac.stubs(:addr).returns "00:00:00:00:00:00"
