@@ -205,7 +205,7 @@ class UUID
   ##
   # Generate a pseudo MAC address because we have no pure-ruby way
   # to know  the MAC  address of the  NIC this system  uses.  Note
-  # that cheating  with pseudo arresses here  is completely legal:
+  # that cheating  with pseudo addresses here  is completely legal:
   # see Section 4.5 of RFC4122 for details.
   #
   # This implementation is shamelessly stolen from
