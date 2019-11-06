@@ -56,19 +56,19 @@ class TestUUID < Test::Unit::TestCase
     UUID.state_file = false
     assert !UUID.state_file
     uuid = UUID.new
-    assert_match(/\A[\da-f]{32}\z/i, uuid.generate(:compact))
+    assert_match(/\A[\da-f]{12}1[\da-f]{3}[89ab][\da-f]{15}\z/i, uuid.generate(:compact))
     seq = uuid.next_sequence
     assert_equal seq + 1, uuid.next_sequence
     assert !UUID.state_file
   end
 
   def validate_uuid_generator(uuid)
-    assert_match(/\A[\da-f]{32}\z/i, uuid.generate(:compact))
+    assert_match(/\A[\da-f]{12}1[\da-f]{3}[89ab][\da-f]{15}\z/i, uuid.generate(:compact))
 
-    assert_match(/\A[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\z/i,
+    assert_match(/\A[\da-f]{8}-[\da-f]{4}-1[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}\z/i,
                  uuid.generate(:default))
 
-    assert_match(/^urn:uuid:[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\z/i,
+    assert_match(/^urn:uuid:[\da-f]{8}-[\da-f]{4}-1[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}\z/i,
                  uuid.generate(:urn))
 
     e = assert_raise ArgumentError do
@@ -84,12 +84,12 @@ class TestUUID < Test::Unit::TestCase
   end
 
   def test_class_generate
-    assert_match(/\A[\da-f]{32}\z/i, UUID.generate(:compact))
+    assert_match(/\A[\da-f]{12}1[\da-f]{3}[89ab][\da-f]{15}\z/i, UUID.generate(:compact))
 
-    assert_match(/\A[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\z/i,
+    assert_match(/\A[\da-f]{8}-[\da-f]{4}-1[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}\z/i,
                  UUID.generate(:default))
 
-    assert_match(/^urn:uuid:[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}\z/i,
+    assert_match(/^urn:uuid:[\da-f]{8}-[\da-f]{4}-1[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}\z/i,
                  UUID.generate(:urn))
 
     e = assert_raise ArgumentError do
