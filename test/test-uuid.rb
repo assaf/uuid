@@ -4,10 +4,10 @@
 # Copyright:: Copyright (c) 2005-2008 Assaf Arkin, Eric Hodel
 # License:: MIT and/or Creative Commons Attribution-ShareAlike
 
-require 'test/unit'
 require 'rubygems'
+require 'test/unit'
+require 'mocha/test_unit'
 require 'uuid'
-require 'mocha'
 
 class TestUUID < Test::Unit::TestCase
 

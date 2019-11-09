@@ -19,5 +19,10 @@ EOF
                        '--webcvs' << 'http://github.com/assaf/uuid'
   s.extra_rdoc_files = ['README.rdoc', 'MIT-LICENSE']
 
-  s.add_dependency 'macaddr', ['~>1.0']
+  s.add_dependency 'macaddr', '~> 1.0'
+
+  s.add_development_dependency 'rake', '~> 10.5.0'
+  s.add_development_dependency 'test-unit', '~> 3.1.8'
+  s.add_development_dependency 'mocha', '~> 1.2.0'
+  s.add_development_dependency 'yard', '~> 0.6.7'
 end

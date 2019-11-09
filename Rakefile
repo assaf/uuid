@@ -1,27 +1,16 @@
 require 'rake/testtask'
-#require 'rake/rdoctask'
-
 
 spec = Gem::Specification.load(File.expand_path("uuid.gemspec", File.dirname(__FILE__)))
 
 desc "Default Task"
-task :default => :test
-
+task default: :test
 
 desc "Run all test cases"
-Rake::TestTask.new do |test|
-  test.verbose = true
-  test.test_files = ['test/*.rb']
-  test.warning = true
+Rake::TestTask.new do |t|
+  t.libs << 'test'
+  t.test_files = FileList['test/*.rb']
+  t.verbose = true
 end
-
-# Create the documentation.
-#Rake::RDocTask.new do |rdoc|
-#  rdoc.rdoc_files.include "README.rdoc", "lib/**/*.rb"
-#  rdoc.options = spec.rdoc_options
-#end
-
-
 
 desc "Push new release to rubyforge and git tag"
 task :push do
