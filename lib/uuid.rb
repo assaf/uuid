@@ -130,9 +130,9 @@ class UUID
 
   ##
   # Returns the UUID generator used by generate.  Useful if you need to mess
-  # with it, e.g. force next sequence when forking (e.g. Unicorn, Resque):
+  # with it, e.g. force next sequence before forking (e.g. Unicorn, Resque):
   #
-  # after_fork do
+  # before_fork do
   #   UUID.generator.next_sequence
   # end
   def self.generator

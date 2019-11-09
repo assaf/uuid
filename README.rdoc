@@ -86,11 +86,11 @@ the following line after disabling the state file:
 
 Note: when using a forking server (Unicorn, Resque, Pipemaster, etc) you don't
 want your forked processes using the same sequence number.  Make sure to
-increment the sequence number each time a worker forks.
+increment the sequence number before each time a worker forks.
 
 For example, in config/unicorn.rb:
 
-  after_fork do |server, worker|
+  before_fork do |server, worker|
     UUID.generator.next_sequence
   end
 
