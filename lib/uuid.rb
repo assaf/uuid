@@ -197,9 +197,8 @@ class UUID
   # Returns true if +uuid+ is in compact, default or urn formats.  Does not
   # validate the layout (RFC 4122 section 4) of the UUID.
   def self.validate(uuid)
-    return true if uuid =~ /\A[\da-f]{32}\z/i
-    return true if
-      uuid =~ /\A(urn:uuid:)?[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}\z/i
+    return true if /\A[\da-f]{32}\z/i.match(uuid)
+    return true if /\A(urn:uuid:)?[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}\z/i.match(uuid)
   end
 
   ##
@@ -437,7 +436,7 @@ protected
         end
         sock = UNIXServer.new(address)
         File.chmod 0666, address
-      elsif address =~ /^(\d+\.\d+\.\d+\.\d+):(\d+)$/
+      elsif /^(\d+\.\d+\.\d+\.\d+):(\d+)$/.match(address)
         sock = TCPServer.new($1, $2.to_i)
       else
         raise ArgumentError, "Don't know how to bind #{address}"
@@ -476,7 +475,7 @@ protected
       return address unless String === address
       if address[0] == ?/
         sock = UNIXSocket.new(address)
-      elsif address =~ /^(\d+\.\d+\.\d+\.\d+):(\d+)$/
+      elsif /^(\d+\.\d+\.\d+\.\d+):(\d+)$/.match(address)
         sock = TCPSocket.new($1, $2.to_i)
       else
         raise ArgumentError, "Don't know how to connect to #{address}"
