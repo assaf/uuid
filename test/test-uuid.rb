@@ -7,7 +7,7 @@
 require 'test/unit'
 require 'rubygems'
 require 'uuid'
-require 'mocha'
+require 'mocha/test_unit'
 
 class TestUUID < Test::Unit::TestCase
 
